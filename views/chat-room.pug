@@ -1,0 +1,29 @@
+extends layout 
+
+block content 
+   div(class="header") 
+      h1 Room: #{room.roomName}
+      p created by #{room.createdBy}
+   div(class="flex-column")
+      did(class="messages-flex-container")
+         div(id="messages-container" class="messages-container")
+            each message in messages
+               if message.isCreatedByMe
+                  div(class="message-box right")
+                     div
+                        p(class="message-content") #{message.content}
+                     p(class="message-by") #{message.createdBy}
+               else 
+                  div(class="message-box")
+                     div
+                        p(class="message-content") #{message.content}
+                     p(class="message-by") #{message.createdBy}
+      div(class="input-container")
+         input(type="text" autocomplete="off" id="message" placeholder="send message...")
+         input(type="hidden" value=room.id id="room-id")
+         button(id="send-message") send
+   template(id="message-template")
+      div(class="message-box")
+         div
+            p(class="message-content") message
+         p(class="message-by") user
