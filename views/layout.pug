@@ -1,0 +1,27 @@
+doctype html
+html
+  head
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    title chat app
+  body
+    div(id="root")
+      div(class="navbar flex")
+        div(class="nav-button home")
+          a(href="/") 
+            button Home
+        if user 
+           div(class="login-status")
+              p(class="abs-center") Logged in as 
+                b #{user.name}
+           div(class="nav-button")
+              a(href="/logout" class="button") 
+                button Logout
+        else if !hideLogin
+           div(class="nav-button")
+              a(href="/login" class="button") 
+                button Login
+      div(class="content flex-column")
+        block content
+    script(src="/javascripts/bundle.js") 

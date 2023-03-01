@@ -1,0 +1,22 @@
+version: '3'
+services:
+  app:
+    build: .
+    tty: true
+    env_file:
+      - .env
+    ports:
+      - 8032:8032
+      - 3000:3000
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  db:
+    build:
+      context: "."
+      dockerfile: "db.Dockerfile"
+    command: redis-server --requirepass redis1234
+    volumes:
+      - ./data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf

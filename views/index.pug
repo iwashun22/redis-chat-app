@@ -1,0 +1,35 @@
+extends layout
+
+block content
+   h1(class="header") Welcome to Chat App
+   div(class="container-center")
+      div(class="container-section")
+         form(action="/chatroom/new", method="post") 
+            input(type="text" placeholder="room name" name="roomName" autocomplete="off" class="form-text")
+            input(type="submit" value="new room" class="form-btn form-btn-green")
+         form(action="/chatroom/join", method="post") 
+            input(type="text" placeholder="room id" name="roomId" value=currentRoom autocomplete="off" class="form-text")
+            input(type="submit" value="join room" class="form-btn form-btn-blue")
+      if createdRooms
+         div(class="container-section")
+            h1 Rooms you created
+            table(class="rooms-list")
+               thead
+                  tr 
+                     th Room name 
+                     th ID 
+                     th
+                     th
+               tbody 
+                  each room in createdRooms 
+                     tr
+                        - let joinUrl = '/chatroom/' + room.id;
+                        - let deleteUrl = '/chatroom/delete/' + room.id;
+                        td #{room.roomName}
+                        td #{room.id}
+                        td 
+                           a(href=joinUrl)
+                              button(class="room-btn enter-room-btn") enter
+                        td
+                           a(href=deleteUrl)
+                              button(class="room-btn delete-room-btn") delete

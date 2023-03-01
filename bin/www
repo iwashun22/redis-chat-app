@@ -1,0 +1,52 @@
+const http = require('http');
+const debug = require('debug')('app:server');
+const app = require('../app');
+const { Server } = require('socket.io');
+
+const port = normalizePort(process.env.PORT || 3000)
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+ 
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+ 
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+ 
+  return false;
+}
+
+app.set('port', port);
+const server = http.createServer(app);
+
+const io = new Server(server);
+
+io.on('connection', socket => {
+  socket.on('join-room', roomId => {
+    socket.join(roomId);
+  })
+  socket.on('send-message', data => {
+    console.log(data);
+    const { message, token } = data;
+    io.to(message.roomId).emit('create-message-html', { message, tokenFromServer: token });
+  })
+})
+
+server.listen(port);
+server.on('error', err => {
+  console.log(err);
+})
+server.on('listening', () => {
+  const addr = server.address();
+  const bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+})
+
+module.exports = io;
